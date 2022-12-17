@@ -4,7 +4,7 @@ import { ConversationType, CreateMessageParams, DeleteGroupMessageParams, Delete
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const axiosClient = axios.create({ baseURL: 'https://9c8a-113-23-5-223.ap.ngrok.io/api' });
+export const axiosClient = axios.create({ baseURL: 'https://1b9c-58-186-67-23.ap.ngrok.io/api' });
 axiosClient.interceptors.request.use(async (config) => {
     if (config.headers) {
         let token = await AsyncStorage.getItem("token")! || '';

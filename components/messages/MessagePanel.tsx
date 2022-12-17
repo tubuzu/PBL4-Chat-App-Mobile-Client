@@ -23,11 +23,11 @@ function MessagePanel() {
   const sendMessage = async () => {
     const trimmedContent = content.trim();
     const attachmentPayload = files;
+    if (!routeId) return;
+    if (!trimmedContent && !attachmentPayload.length) return;
     setContent("");
     // dispatch(removeAllAttachments());
     setFiles([]);
-    if (!routeId) return;
-    if (!trimmedContent && !attachmentPayload.length) return;
     const formData = new FormData();
     formData.append("id", routeId);
     trimmedContent && formData.append("content", trimmedContent);
@@ -46,10 +46,10 @@ function MessagePanel() {
     }
   };
   const sendImage = async (file: ImagePickerAsset) => {
-    setContent("");
-    setFiles([]);
     if (!routeId) return;
     if (!file) return;
+    setContent("");
+    setFiles([]);
     const formData = new FormData();
     formData.append("id", routeId);
     const photo = {

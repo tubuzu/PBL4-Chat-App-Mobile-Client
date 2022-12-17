@@ -7,15 +7,13 @@ export interface MessageContainerState {
   messageBeingForward?: MessageType;
   isEditingMessage: boolean;
   isForwardingMessage: boolean;
-//   showContextMenu: boolean;
-//   points: Points;
+  showContextMenu: boolean;
 }
 
 const initialState: MessageContainerState = {
   isEditingMessage: false,
   isForwardingMessage: false,
-//   showContextMenu: false,
-//   points: { x: 0, y: 0 },
+  showContextMenu: false,
 };
 
 export const messageContainerSlice = createSlice({
@@ -50,9 +48,9 @@ export const messageContainerSlice = createSlice({
       state.messageBeingForward = undefined;
       state.selectedMessage = undefined;
     },
-    // toggleContextMenu: (state, action: PayloadAction<boolean>) => {
-    //   state.showContextMenu = action.payload;
-    // },
+    toggleContextMenu: (state, action: PayloadAction<boolean>) => {
+      state.showContextMenu = action.payload;
+    },
     // setContextMenuLocation: (state, action: PayloadAction<Points>) => {
     //   state.points = action.payload;
     // },
@@ -68,7 +66,7 @@ export const {
   editMessageContent,
   // forwardMessage,
   resetMessageContainer,
-//   toggleContextMenu,
+  toggleContextMenu,
 //   setContextMenuLocation,
 } = messageContainerSlice.actions;
 

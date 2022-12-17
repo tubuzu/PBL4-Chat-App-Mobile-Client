@@ -206,7 +206,12 @@ const MessagePanelFooter = ({
               />
             </TouchableOpacity>
           </View>
-          {
+
+          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+            <Icon name={"send"} size={23} color={LightTheme.colors.white} />
+          </TouchableOpacity>
+
+          {/* {
             content || files.length ? (
               <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
                 <Icon name={"send"} size={23} color={LightTheme.colors.white} />
@@ -220,26 +225,27 @@ const MessagePanelFooter = ({
                 />
               </TouchableOpacity>
             )
-            // !started ? (
-            //   <TouchableOpacity
-            //     style={styles.sendButton}
-            //     onPress={startSpeechToText}
-            //   >
-            //     <Icon
-            //       name={"microphone"}
-            //       size={23}
-            //       color={LightTheme.colors.white}
-            //     />
-            //   </TouchableOpacity>
-            // ) : (
-            //   <TouchableOpacity
-            //     style={styles.sendButton}
-            //     onPress={stopSpeechToText}
-            //   >
-            //     <Icon name={"pause"} size={23} color={LightTheme.colors.white} />
-            //   </TouchableOpacity>
-            // )
-          }
+
+            !started ? (
+              <TouchableOpacity
+                style={styles.sendButton}
+                onPress={startSpeechToText}
+              >
+                <Icon
+                  name={"microphone"}
+                  size={23}
+                  color={LightTheme.colors.white}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.sendButton}
+                onPress={stopSpeechToText}
+              >
+                <Icon name={"pause"} size={23} color={LightTheme.colors.white} />
+              </TouchableOpacity>
+            )
+          } */}
         </View>
       </Animated.View>
     </>

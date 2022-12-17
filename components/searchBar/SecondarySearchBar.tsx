@@ -3,12 +3,9 @@ import { Pressable, Text, TextInput, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles } from "./styles";
 
-type Props = {
-  query: string;
-  setQuery: any;
-}
+export default function SecondarySearchBar() {
+  const [query, setQuery] = useState<string>("");
 
-export default function TopSearchBar({query, setQuery}: Props) {
   const handleClearQuery = () => {
     setQuery("");
   };

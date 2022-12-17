@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import defaultAvatar from "../../assets/default_avatar.jpg";
 import { AppDispatch, RootState } from "../../store";
 import { setSelectedMessage } from "../../store/messageContainer/messageContainerSlice";
+import { capitalize } from "../../utils/helpers";
 import ImageAttachments from "./ImageAttachments";
 
 type MessageProps = {
@@ -23,6 +24,7 @@ type MessageProps = {
   message: any;
   displayMessageTime: boolean;
   setDisplayMessageTime: any;
+  onContextMenu: any;
 };
 type LeftMessageStyleProps = {
   color?: string;
@@ -47,6 +49,7 @@ const Message = ({
   message,
   displayMessageTime,
   setDisplayMessageTime,
+  onContextMenu,
 }: MessageProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedMessage = useSelector(
@@ -166,6 +169,9 @@ const Message = ({
             isOnLeft("messageContentContainer"),
           ]}
         >
+          {isLeft && isFirst && (
+            <Text>{capitalize(message?.sender?.lastname)}</Text>
+          )}
           {message?.attachments?.length > 0 && (
             <View
               style={[
@@ -174,7 +180,10 @@ const Message = ({
                 isOnLeft("images"),
               ]}
             >
-              <ImageAttachments attachments={message.attachments} />
+              <ImageAttachments
+                onContextMenu={onContextMenu}
+                attachments={message.attachments}
+              />
               {/* <VideoAttachments
                 attachments={videoAttachments}
                 width={imageContainerWidth}
@@ -186,8 +195,9 @@ const Message = ({
               activeOpacity={0.8}
               onPress={handlePress}
               onLongPress={() => {
-                console.log("Long Press");
+                onContextMenu();
               }}
+              delayLongPress={400}
               style={[styles.messageContent, isOnLeft("messageContent")]}
             >
               <View style={styles.messageView}>

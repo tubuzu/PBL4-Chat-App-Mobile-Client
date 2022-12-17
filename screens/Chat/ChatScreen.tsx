@@ -6,9 +6,18 @@ import TopSearchBar from "../../components/searchBar/TopSearchBar";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 
-import { Conversation, Group, GroupMessageEventPayload, MessageEventPayload } from "../../utils/types";
+import {
+  Conversation,
+  Group,
+  GroupMessageEventPayload,
+  MessageEventPayload,
+} from "../../utils/types";
 import { updateType } from "../../store/selectedSlice";
-import { addConversation, fetchConversationsThunk, updateConversation } from "../../store/conversations/conversationSlice";
+import {
+  addConversation,
+  fetchConversationsThunk,
+  updateConversation,
+} from "../../store/conversations/conversationSlice";
 import ConversationItem from "../../components/chat/ConversationItem";
 import ConversationTabs from "../../components/tabs/ConversationTabs";
 import GroupItem from "../../components/chat/GroupItem";
@@ -17,15 +26,25 @@ import { AuthContext } from "../../navigation/AuthProvider";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import AddGroupModal from "../../components/modals/AddGroupModal";
 import { SocketContext } from "../../utils/context/SocketContext";
-import { addGroupMessage, deleteGroupMessage } from "../../store/groupMessages/groupMessageSlice";
-import { addGroup, removeGroup, updateGroup } from "../../store/groups/groupSlice";
+import {
+  addGroupMessage,
+  deleteGroupMessage,
+} from "../../store/groupMessages/groupMessageSlice";
+import {
+  addGroup,
+  fetchGroupsThunk,
+  removeGroup,
+  updateGroup,
+} from "../../store/groups/groupSlice";
 import { addMessage, deleteMessage } from "../../store/messages/messageSlice";
+import { getRecipientFromConversation } from "../../utils/helpers";
 
 type Props = {
   navigation: any;
 };
 
 const ChatScreen = ({ navigation }: Props) => {
+  const [query, setQuery] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const socket = useContext(SocketContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -42,25 +61,25 @@ const ChatScreen = ({ navigation }: Props) => {
   useEffect(() => {
     dispatch(updateType("private"));
     dispatch(fetchConversationsThunk());
+    dispatch(fetchGroupsThunk());
   }, []);
-
 
   useEffect(() => {
     // CONVERSATION
-    socket.on('onMessage', (payload: MessageEventPayload) => {
-      console.log('Message Received');
+    socket.on("onMessage", (payload: MessageEventPayload) => {
+      console.log("Message Received");
       const { conversation, message } = payload;
       // console.log(conversation, message);
       dispatch(addMessage(payload));
       dispatch(updateConversation(conversation));
     });
-    socket.on('onConversation', (payload: Conversation) => {
-      console.log('Received onConversation Event');
+    socket.on("onConversation", (payload: Conversation) => {
+      console.log("Received onConversation Event");
       console.log(payload);
       dispatch(addConversation(payload));
     });
-    socket.on('onMessageDelete', (payload) => {
-      console.log('Message Deleted');
+    socket.on("onMessageDelete", (payload) => {
+      console.log("Message Deleted");
       console.log(payload);
       dispatch(deleteMessage(payload));
     });
@@ -86,19 +105,13 @@ const ChatScreen = ({ navigation }: Props) => {
     });
 
     // update all user in room to see new member
-    socket.on(
-      "onGroupReceivedNewUser",
-      (payload) => {
-        dispatch(updateGroup(payload));
-      }
-    );
+    socket.on("onGroupReceivedNewUser", (payload) => {
+      dispatch(updateGroup(payload));
+    });
 
-    socket.on(
-      "onGroupRecipientRemoved",
-      (payload) => {
-        dispatch(updateGroup(payload));
-      }
-    );
+    socket.on("onGroupRecipientRemoved", (payload) => {
+      dispatch(updateGroup(payload));
+    });
 
     socket.on("onGroupRemoved", (payload) => {
       dispatch(removeGroup(payload));
@@ -107,8 +120,7 @@ const ChatScreen = ({ navigation }: Props) => {
     socket.on("onGroupParticipantLeft", (payload) => {
       if (payload.userId === user?._id) {
         dispatch(removeGroup(payload.group));
-      }
-      else dispatch(updateGroup(payload.group));
+      } else dispatch(updateGroup(payload.group));
     });
 
     socket.on("onGroupOwnerUpdate", (payload: Group) => {
@@ -117,9 +129,9 @@ const ChatScreen = ({ navigation }: Props) => {
 
     return () => {
       // CONVERSATION
-      socket.off('onMessage');
-      socket.off('onConversation');
-      socket.off('onMessageDelete');
+      socket.off("onMessage");
+      socket.off("onConversation");
+      socket.off("onMessageDelete");
 
       // GROUP
       socket.off("onGroupMessage");
@@ -139,7 +151,7 @@ const ChatScreen = ({ navigation }: Props) => {
       <View style={styles.chattopContainer}>
         <View style={styles.chatheader}>
           <View style={styles.searchBar}>
-            <TopSearchBar />
+            <TopSearchBar query={query} setQuery={setQuery} />
           </View>
           <Pressable
             onPress={() => setModalVisible(true)}
@@ -156,7 +168,19 @@ const ChatScreen = ({ navigation }: Props) => {
       <ConversationTabs navigation={navigation} />
       {conversationType === "private" ? (
         <FlatList
-          data={conversations}
+          data={
+            query
+              ? conversations.filter((conv) => {
+                  const recipient = getRecipientFromConversation(
+                    conv,
+                    user?._id
+                  );
+                  return `${recipient?.firstname} ${recipient?.lastname}`
+                    .toLowerCase()
+                    .includes(query.toLowerCase());
+                })
+              : conversations
+          }
           keyExtractor={(item: Conversation) => item._id}
           renderItem={({ item }) => (
             <ConversationItem
@@ -168,10 +192,16 @@ const ChatScreen = ({ navigation }: Props) => {
         />
       ) : (
         <FlatList
-          data={groups}
+          data={
+            query
+              ? groups.filter((group) =>
+                  group?.title?.toLowerCase().includes(query.toLowerCase())
+                )
+              : groups
+          }
           keyExtractor={(item: Group) => item._id}
           renderItem={({ item }) => (
-            <GroupItem navigation={navigation} item={item} />
+            <GroupItem navigation={navigation} item={item} userId={user?._id!} />
           )}
         />
       )}

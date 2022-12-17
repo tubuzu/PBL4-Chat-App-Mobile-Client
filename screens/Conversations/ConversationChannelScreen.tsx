@@ -9,6 +9,7 @@ import { fetchMessagesThunk } from "../../store/messages/messageThunk";
 import { useRoute } from "@react-navigation/native";
 import MessagePanel from "../../components/messages/MessagePanel";
 import { SocketContext } from "../../utils/context/SocketContext";
+import { editMessage } from "../../store/messages/messageSlice";
 
 function ConversationChannelScreen() {
   // const theme = useTheme() as Theme;
@@ -42,11 +43,11 @@ function ConversationChannelScreen() {
     //   console.log('onTypingStop: User has stopped typing...');
     //   setIsRecipientTyping(false);
     // });
-    // socket.on('onMessageUpdate', (message) => {
-    //   console.log('onMessageUpdate received');
-    //   console.log(message);
-    //   dispatch(editMessage(message));
-    // });
+    socket.on('onMessageUpdate', (message) => {
+      console.log('onMessageUpdate received');
+      console.log(message);
+      dispatch(editMessage(message));
+    });
 
     return () => {
       socket.emit('onConversationLeave', { conversationId });

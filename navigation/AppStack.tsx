@@ -3,6 +3,7 @@ import React, { useContext, useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { AntDesign } from "@expo/vector-icons";
 import ChatScreen from "../screens/Chat/ChatScreen";
 import SettingScreen from "../screens/Setting/SettingScreen";
 import FriendScreen from "../screens/Friend/FriendScreen";
@@ -15,6 +16,9 @@ import { addConversation } from "../store/conversations/conversationSlice";
 import ConversationChannelScreen from "../screens/Conversations/ConversationChannelScreen";
 import ConversationTitle from "../components/conversation/ConversationTitle";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import ForwardMessageScreen from "../screens/Messages/ForwardMessageScreen";
+import GroupChannelScreen from "../screens/Group/GroupChannelScreen";
+import ChangePasswordScreen from "../screens/Setting/ChangePasswordScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -76,9 +80,27 @@ const MessageStack = ({ navigation }: Props) => (
       component={ConversationChannelScreen}
       options={({ route }: any) => ({
         // title: "hehe",
-        headerTitle: () => (
-          <ConversationTitle recipient={route?.params?.recipient} />
-        ),
+        headerTitle: () => <ConversationTitle />,
+        headerBackTitleVisible: false,
+      })}
+    />
+    <Stack.Screen
+      name="Group"
+      component={GroupChannelScreen}
+      options={({ route }: any) => ({
+        // title: "hehe",
+        headerTitle: () => <ConversationTitle />,
+        headerBackTitleVisible: false,
+      })}
+    />
+    <Stack.Screen
+      name="ForwardMessage"
+      component={ForwardMessageScreen}
+      options={({ route }: any) => ({
+        title: "Forward Message",
+        // headerTitle: () => (
+        //   <ConversationTitle recipient={route?.params?.recipient} />
+        // ),
         headerBackTitleVisible: false,
       })}
     />
@@ -88,26 +110,24 @@ const MessageStack = ({ navigation }: Props) => (
 const SettingStack = ({ navigation }: Props) => (
   <Stack.Navigator>
     <Stack.Screen
-      name="ProfileScreen"
+      name="SettingScreen"
       component={SettingScreen}
       options={{
-        headerShown: false,
+        title: "Settings",
       }}
     />
-    {/* <Stack.Screen
-      name="EditProfile"
-      component={EditProfileScreen}
+    <Stack.Screen
+      name="ChangePassword"
+      component={ChangePasswordScreen}
       options={{
-        headerTitle: "Edit Profile",
+        headerTitle: "Change Password",
         headerBackTitleVisible: false,
         headerTitleAlign: "center",
         headerStyle: {
           backgroundColor: "#fff",
-          shadowColor: "#fff",
-          elevation: 0,
         },
       }}
-    /> */}
+    />
   </Stack.Navigator>
 );
 
@@ -179,9 +199,10 @@ const AppStack = () => {
         name="Settings"
         component={SettingStack}
         options={{
+          headerShown: false,
           // tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" color={color} size={size} />
+            <AntDesign name="setting" color={color} size={size} />
           ),
         }}
       />

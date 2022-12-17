@@ -154,13 +154,13 @@ export const groupsSlice = createSlice({
   },
 });
 
-const selectGroups = (state: RootState) => state.groups.groups;
-const selectGroupId = (state: RootState, _id: string) => _id;
+// const selectGroups = (state: RootState) => state.groups.groups;
+// const selectGroupId = (state: RootState, _id: string) => _id;
 
-export const selectGroupById = createSelector(
-  [selectGroups, selectGroupId],
-  (groups, groupId) => groups.find((g: Group) => g._id === groupId)
-);
+// export const selectGroupById = createSelector(
+//   [selectGroups, selectGroupId],
+//   (groups, groupId) => groups.find((g: Group) => g._id === groupId)
+// );
 
 export const {
   addGroup,

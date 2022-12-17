@@ -1,11 +1,11 @@
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { Conversation, User } from "./types";
+import { Conversation, Group, User } from "./types";
 
 export async function takePhoto() {
     let result = ImagePicker.launchCameraAsync();
     return result;
-  }
+}
 
 export const getUserData = async () => {
     return JSON.parse(await AsyncStorage.getItem("userData") as string) as User;
@@ -33,3 +33,23 @@ export const getRecipientFromConversation = (
         ? conversation?.recipient
         : conversation?.creator;
 };
+
+export const getTransformedTitle = (group: Group) => {
+    // console.log(group)
+    const MAX_TITLE_LENGTH = 20;
+    if (!group?.title) {
+        const usersToString = group?.users
+            .map((user) => user?.firstname)
+            .join(", ");
+        return usersToString?.length > MAX_TITLE_LENGTH
+            ? usersToString?.slice(0, MAX_TITLE_LENGTH).concat("...")
+            : usersToString;
+    }
+    return group?.title.length > MAX_TITLE_LENGTH
+        ? group?.title.slice(0, MAX_TITLE_LENGTH).concat("...")
+        : group?.title;
+};
+
+export function capitalize(s: string) {
+    return s[0].toUpperCase() + s.slice(1);
+}

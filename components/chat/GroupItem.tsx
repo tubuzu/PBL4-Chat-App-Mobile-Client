@@ -13,56 +13,56 @@ import {
 import { Group } from "../../utils/types";
 import groupAvatar from "../../assets/people.png";
 import { formatRelative } from "date-fns";
+import { getTransformedTitle } from "../../utils/helpers";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 type Props = {
   item: Group;
   navigation: any;
+  userId: string;
 };
 
-function GroupItem({ item: group, navigation }: Props) {
-  const MAX_TITLE_LENGTH = 20;
-  const getTransformedTitle = () => {
-    if (!group.title) {
-      const usersToString = group.users
-        .map((user) => user.firstname)
-        .join(", ");
-      return usersToString.length > MAX_TITLE_LENGTH
-        ? usersToString.slice(0, MAX_TITLE_LENGTH).concat("...")
-        : usersToString;
+function GroupItem({ item: group, navigation, userId }: Props) {
+  const MESSAGE_LENGTH_MAX = 50;
+  const latestMessageContent = () => {
+    if (group?.latestMessage !== undefined) {
+      const { latestMessage } = group;
+      const isMe = latestMessage.sender.toString() === userId;
+      let sender = group.users.find(
+        (user) => user._id === group.latestMessage.sender.toString()
+      );
+      if (latestMessage && latestMessage.content) {
+        return latestMessage.content?.length >= MESSAGE_LENGTH_MAX
+          ? isMe
+            ? latestMessage.content?.slice(0, MESSAGE_LENGTH_MAX).concat("...")
+            : `${sender?.lastname}: ${latestMessage.content
+                ?.slice(0, MESSAGE_LENGTH_MAX)
+                .concat("...")}`
+          : isMe
+          ? latestMessage.content
+          : `${sender?.lastname}: ${latestMessage.content}`;
+      } else if (latestMessage && latestMessage.attachments) {
+        let msg =
+          latestMessage.sender.toString() === userId
+            ? `You has sent an attachment`
+            : `${sender?.lastname} has sent an attachment`;
+        return msg.length >= MESSAGE_LENGTH_MAX
+          ? msg.slice(0, MESSAGE_LENGTH_MAX).concat("...")
+          : msg;
+      }
     }
-    return group.title.length > MAX_TITLE_LENGTH
-      ? group.title.slice(0, MAX_TITLE_LENGTH).concat("...")
-      : group.title;
+    return null;
   };
-  //   const latestMessageContent = () => {
-  //     const { latestMessage } = conversation;
-  //     if (latestMessage && latestMessage.content)
-  //       return latestMessage.content?.length >= MESSAGE_LENGTH_MAX
-  //         ? latestMessage.content?.slice(0, MESSAGE_LENGTH_MAX).concat("...")
-  //         : latestMessage.content;
-  //     else if (latestMessage && latestMessage.attachments) {
-  //       let msg =
-  //         latestMessage.sender.toString() === user?._id
-  //           ? `You has sent an attachment`
-  //           : `${recipient?.firstname} ${recipient?.lastname} has sent an attachment`;
-  //       return msg.length >= MESSAGE_LENGTH_MAX
-  //         ? msg.slice(0, MESSAGE_LENGTH_MAX).concat("...")
-  //         : msg;
-  //     }
-  //     return null;
-  //   };
-
-  //   const hasProfilePicture = () => recipient?.avatar;
-
   return (
-    <Card onPress={() => navigation.navigate("Chat", { groupId: group._id })}>
+    <Card onPress={() => navigation.navigate("Group", { chatId: group._id })}>
       <UserInfo>
         <UserImgWrapper>
           <UserImg source={groupAvatar} />
         </UserImgWrapper>
         <TextSection>
           <UserInfoText>
-            <UserName>{getTransformedTitle()}</UserName>
+            <UserName>{getTransformedTitle(group)}</UserName>
             <PostTime>
               {group?.latestMessage
                 ? formatRelative(
@@ -72,7 +72,7 @@ function GroupItem({ item: group, navigation }: Props) {
                 : "new group"}
             </PostTime>
           </UserInfoText>
-          <MessageText>{group?.latestMessage?.content}</MessageText>
+          <MessageText>{latestMessageContent()}</MessageText>
         </TextSection>
       </UserInfo>
     </Card>

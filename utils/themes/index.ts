@@ -1,19 +1,8 @@
-type paletteType = {
-    tealGreen: string,
-    tealGreenDark: string,
-    green: string,
-    lime: string,
-    skyblue: string,
-    smokeWhite: string,
-    white: string,
-    gray: string,
-    lightGray: string,
-    iconGray: string,
-}
-
-const palette: paletteType = {
+export const palette = {
     tealGreen: "#128c7e",
     tealGreenDark: "#075e54",
+    dark700: "#3b4045",
+    lightGreen: "#5eba7d",
     green: "#25d366",
     lime: "#dcf8c6",
     skyblue: "#34b7f1",
@@ -22,6 +11,7 @@ const palette: paletteType = {
     gray: "#3C3C3C",
     lightGray: "#757575",
     iconGray: "#717171",
+    tomato: "#ff6347",
 };
 
 export type Theme = {

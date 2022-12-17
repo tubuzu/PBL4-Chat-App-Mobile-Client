@@ -1,27 +1,52 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { User } from "../../utils/types";
+import { Conversation, Group } from "../../utils/types";
+import groupAvatar from "../../assets/people.png";
 import defaultAvatar from "../../assets/default_avatar.jpg";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { getTransformedTitle } from "../../utils/helpers";
+import { useRoute } from "@react-navigation/native";
 
-type ConversationTitleProps = {
-  recipient: User;
-};
+// type ConversationTitleProps = {
+//   conversationId?: string;
+//   groupId?: string;
+// };
 
-function ConversationTitle({ recipient }: ConversationTitleProps) {
+function ConversationTitle() {
+  const route: any = useRoute();
+  const chatId = route.params?.chatId;
+  // console.log(chatId);
+  const conversationType = useSelector(
+    (state: RootState) => state.selectedConversationType.type
+  );
+  const group = useSelector((state: RootState) =>
+    state.groups.groups.find((g: Group) => g._id === chatId)
+  );
+  // console.log(group);
+  const conversation = useSelector((state: RootState) =>
+    state.conversations.conversations.find(
+      (c: Conversation) => c._id === chatId
+    )
+  );
   return (
     <View style={styles.container}>
       <Image
         source={
-          recipient?.avatar?.url
-            ? {
-                uri: recipient?.avatar?.url,
-              }
-            : defaultAvatar
+          conversationType === "private"
+            ? conversation?.recipient?.avatar?.url
+              ? {
+                  uri: conversation?.recipient?.avatar?.url,
+                }
+              : defaultAvatar
+            : groupAvatar
         }
         style={styles.avatar}
       />
       <Text style={styles.username}>
-        {recipient?.firstname} {recipient?.lastname}
+        {conversationType === "private"
+          ? `${conversation?.recipient?.firstname} ${conversation?.recipient?.lastname}`
+          : getTransformedTitle(group!)}
       </Text>
     </View>
   );
@@ -37,7 +62,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 25,
-    marginRight: 10
+    marginRight: 10,
   },
   username: { fontSize: 18, color: "#1b1b33" },
 });

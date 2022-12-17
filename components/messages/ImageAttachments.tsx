@@ -1,13 +1,14 @@
-import { Pressable, Image, StyleSheet } from "react-native";
+import { Pressable, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import ImageView from "react-native-image-viewing";
 import { MessageAttachment } from "../../utils/types";
 
 type Props = {
   attachments: MessageAttachment[];
+  onContextMenu: any;
 };
 
-const ImageAttachments = ({ attachments }: Props) => {
+const ImageAttachments = ({ attachments, onContextMenu }: Props) => {
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   // let imageIndex = 0;
@@ -19,7 +20,12 @@ const ImageAttachments = ({ attachments }: Props) => {
   return (
     <>
       {attachments.map((attachment, index) => (
-        <Pressable
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onLongPress={() => {
+            onContextMenu();
+          }}
+          delayLongPress={400}
           key={attachment._id}
           style={[
             styles.imageContainer,
@@ -28,11 +34,11 @@ const ImageAttachments = ({ attachments }: Props) => {
           onPress={() => handleSelectImage(index)}
         >
           <Image source={{ uri: attachment.url }} style={styles.image} />
-        </Pressable>
+        </TouchableOpacity>
       ))}
 
       <ImageView
-        images={attachments.map(({ url }) => ({ uri: url }))}
+        images={attachments.map(({ url }, index) => ({ key: index, uri: url }))}
         imageIndex={imageIndex}
         visible={imageViewerVisible}
         onRequestClose={() => setImageViewerVisible(false)}

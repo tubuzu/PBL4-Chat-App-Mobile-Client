@@ -28,15 +28,21 @@ function ConversationItem({ item: conversation, navigation, userId }: Props) {
   const latestMessageContent = () => {
     if (conversation?.latestMessage != undefined) {
       const { latestMessage } = conversation;
+      let isMe = latestMessage.sender.toString() === userId;
       if (latestMessage && latestMessage.content)
         return latestMessage.content?.length >= MESSAGE_LENGTH_MAX
-          ? latestMessage.content?.slice(0, MESSAGE_LENGTH_MAX).concat("...")
-          : latestMessage.content;
+          ? isMe
+            ? latestMessage.content?.slice(0, MESSAGE_LENGTH_MAX).concat("...")
+            : `${recipient?.lastname} ${latestMessage.content
+                ?.slice(0, MESSAGE_LENGTH_MAX)
+                .concat("...")}`
+          : isMe
+          ? latestMessage.content
+          : `${recipient?.lastname} ${latestMessage.content}`;
       else if (latestMessage && latestMessage.attachments) {
-        let msg =
-          latestMessage.sender.toString() === userId
-            ? `You has sent an attachment`
-            : `${recipient?.firstname} ${recipient?.lastname} has sent an attachment`;
+        let msg = isMe
+          ? `You has sent an attachment`
+          : `${recipient?.firstname} ${recipient?.lastname} has sent an attachment`;
         return msg.length >= MESSAGE_LENGTH_MAX
           ? msg.slice(0, MESSAGE_LENGTH_MAX).concat("...")
           : msg;
@@ -50,7 +56,7 @@ function ConversationItem({ item: conversation, navigation, userId }: Props) {
   return (
     <Card
       onPress={() =>
-        navigation.navigate("Conversation", { chatId: conversation._id, recipient: recipient })
+        navigation.navigate("Conversation", { chatId: conversation._id })
       }
     >
       <UserInfo>
