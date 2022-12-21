@@ -62,8 +62,8 @@ function ConversationMessageActionMenu({
   return (
     <View style={styles.menuContainer}>
       {message?.sender._id === user?._id && (
-        <TouchableHighlight onPress={deleteMessage} underlayColor="#ccc">
-          <View style={[styles.menuItem, styles.borderAtBottom]}>
+        <TouchableHighlight onPress={deleteMessage} underlayColor="#ccc" style={styles.menuItemContainer}>
+          <View style={[styles.menuItem]}>
             <AntDesign
               name="delete"
               size={24}
@@ -75,8 +75,8 @@ function ConversationMessageActionMenu({
         </TouchableHighlight>
       )}
       {message?.sender._id === user?._id && (
-        <TouchableHighlight underlayColor="#ccc" onPress={editMessage}>
-          <View style={[styles.menuItem, styles.borderAtBottom]}>
+        <TouchableHighlight underlayColor="#ccc" onPress={editMessage} style={styles.menuItemContainer}>
+          <View style={[styles.menuItem]}>
             <AntDesign
               name="edit"
               size={24}
@@ -106,6 +106,9 @@ const styles = StyleSheet.create({
   menuContainer: {
     flexDirection: "column",
     backgroundColor: "white",
+  },
+  menuItemContainer: {
+    borderRadius: 10,
   },
   menuItem: {
     paddingHorizontal: 20,

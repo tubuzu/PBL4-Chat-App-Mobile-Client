@@ -1,4 +1,10 @@
-import { Pressable, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Pressable,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useState } from "react";
 import ImageView from "react-native-image-viewing";
 import { MessageAttachment } from "../../utils/types";
@@ -26,12 +32,12 @@ const ImageAttachments = ({ attachments, onContextMenu }: Props) => {
             onContextMenu();
           }}
           delayLongPress={400}
-          key={attachment._id}
+          onPress={() => handleSelectImage(index)}
+          key={index}
           style={[
             styles.imageContainer,
             attachments.length === 1 && { flex: 1 },
           ]}
-          onPress={() => handleSelectImage(index)}
         >
           <Image source={{ uri: attachment.url }} style={styles.image} />
         </TouchableOpacity>

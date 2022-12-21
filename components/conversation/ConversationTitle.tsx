@@ -1,12 +1,16 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Conversation, Group } from "../../utils/types";
 import groupAvatar from "../../assets/people.png";
 import defaultAvatar from "../../assets/default_avatar.jpg";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
 import { getTransformedTitle } from "../../utils/helpers";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { toggleModal } from "../../store/groups/groupSlice";
+// import { toggleSidebar } from "../../store/groups/groupRecipientsSidebarSlice";
 
 // type ConversationTitleProps = {
 //   conversationId?: string;
@@ -15,6 +19,8 @@ import { useRoute } from "@react-navigation/native";
 
 function ConversationTitle() {
   const route: any = useRoute();
+  const navigation: any = useNavigation();
+  const dispatch = useDispatch<AppDispatch>();
   const chatId = route.params?.chatId;
   // console.log(chatId);
   const conversationType = useSelector(
@@ -29,31 +35,68 @@ function ConversationTitle() {
       (c: Conversation) => c._id === chatId
     )
   );
+  const handleGroupSettingNavigate = () => {
+    navigation.navigate("GroupSettings", {
+      groupId: group?._id,
+    });
+  };
+  const handleToggleAddRecipientModal = () => {
+    dispatch(toggleModal(true));
+  };
+
   return (
     <View style={styles.container}>
-      <Image
-        source={
-          conversationType === "private"
-            ? conversation?.recipient?.avatar?.url
-              ? {
-                  uri: conversation?.recipient?.avatar?.url,
-                }
-              : defaultAvatar
-            : groupAvatar
-        }
-        style={styles.avatar}
-      />
-      <Text style={styles.username}>
-        {conversationType === "private"
-          ? `${conversation?.recipient?.firstname} ${conversation?.recipient?.lastname}`
-          : getTransformedTitle(group!)}
-      </Text>
+      <View style={styles.leftContainer}>
+        <Image
+          source={
+            conversationType === "private"
+              ? conversation?.recipient?.avatar?.url
+                ? {
+                    uri: conversation?.recipient?.avatar?.url,
+                  }
+                : defaultAvatar
+              : groupAvatar
+          }
+          style={styles.avatar}
+        />
+        <Text style={styles.username}>
+          {conversationType === "private"
+            ? `${conversation?.recipient?.firstname} ${conversation?.recipient?.lastname}`
+            : getTransformedTitle(group!)}
+        </Text>
+      </View>
+      {conversationType === "group" && (
+        <View style={styles.rightContainer}>
+          <Pressable onPress={handleToggleAddRecipientModal}>
+            <AntDesign
+              name="adduser"
+              size={24}
+              color="black"
+              style={{ marginRight: 10 }}
+            />
+          </Pressable>
+          <Pressable onPress={handleGroupSettingNavigate}>
+            <Ionicons name="menu" size={30} color="black" />
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    width: "90%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  leftContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  rightContainer: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",

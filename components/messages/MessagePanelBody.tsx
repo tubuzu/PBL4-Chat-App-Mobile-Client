@@ -41,12 +41,12 @@ function MessagePanelBody() {
   const { showContextMenu } = useSelector(
     (state: RootState) => state.messageContainer
   );
-  const { isEditingMessage, messageBeingEdited } = useSelector(
+  const { isEditingMessage } = useSelector(
     (state: RootState) => state.messageContainer
   );
-  const { isForwardingMessage } = useSelector(
-    (state: RootState) => state.messageContainer
-  );
+  // const { isForwardingMessage } = useSelector(
+  //   (state: RootState) => state.messageContainer
+  // );
   const messages =
     selectedType === "private" ? conversationMessages : groupMessages;
 
@@ -57,8 +57,8 @@ function MessagePanelBody() {
     dispatch(setSelectedMessage(message));
   };
 
-  const onEditMessageChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    dispatch(editMessageContent(e.target.value));
+  // const onEditMessageChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  //   dispatch(editMessageContent(e.target.value));
 
   const setEditModalVisible = (visible: boolean) => {
     dispatch(setIsEditing(visible));

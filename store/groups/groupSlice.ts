@@ -17,7 +17,6 @@ import {
   AddGroupRecipientParams,
   CreateGroupParams,
   Group,
-  Points,
   RemoveGroupRecipientParams,
   UpdateGroupOwnerParams,
 } from '../../utils/types';
@@ -25,14 +24,14 @@ import {
 export interface GroupState {
   groups: Group[];
   showGroupContextMenu: boolean;
+  showRecipientAddModal: boolean;
   selectedGroupContextMenu?: Group;
-  points: Points;
 }
 
 const initialState: GroupState = {
   groups: [],
   showGroupContextMenu: false,
-  points: { x: 0, y: 0 },
+  showRecipientAddModal: false,
 };
 
 export const fetchGroupsThunk = createAsyncThunk('groups/fetch', () => {
@@ -90,11 +89,11 @@ export const groupsSlice = createSlice({
     toggleContextMenu: (state, action: PayloadAction<boolean>) => {
       state.showGroupContextMenu = action.payload;
     },
+    toggleModal: (state, action: PayloadAction<boolean>) => {
+      state.showRecipientAddModal = action.payload;
+    },
     setSelectedGroup: (state, action: PayloadAction<Group>) => {
       state.selectedGroupContextMenu = action.payload;
-    },
-    setContextMenuLocation: (state, action: PayloadAction<Points>) => {
-      state.points = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -154,20 +153,20 @@ export const groupsSlice = createSlice({
   },
 });
 
-// const selectGroups = (state: RootState) => state.groups.groups;
-// const selectGroupId = (state: RootState, _id: string) => _id;
+const selectGroups = (state: RootState) => state.groups.groups;
+const selectGroupId = (state: RootState, _id: string) => _id;
 
-// export const selectGroupById = createSelector(
-//   [selectGroups, selectGroupId],
-//   (groups, groupId) => groups.find((g: Group) => g._id === groupId)
-// );
+export const selectGroupById = createSelector(
+  [selectGroups, selectGroupId],
+  (groups, groupId) => groups.find((g: Group) => g._id === groupId)
+);
 
 export const {
   addGroup,
   updateGroup,
   removeGroup,
   toggleContextMenu,
-  setContextMenuLocation,
+  toggleModal,
   setSelectedGroup,
 } = groupsSlice.actions;
 

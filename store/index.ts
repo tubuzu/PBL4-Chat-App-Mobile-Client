@@ -5,7 +5,7 @@ import selectedTypeReducer from './selectedSlice';
 import groupsReducer from './groups/groupSlice';
 import groupMessagesReducer from './groupMessages/groupMessageSlice';
 import messageContainerReducer from './messageContainer/messageContainerSlice';
-// import groupSidebarReducer from './groupRecipientsSidebarSlice';
+import groupSidebarReducer from './groups/groupRecipientsSidebarSlice';
 // import friendsReducer from './friends/friendsSlice';
 // import rateLimitReducer from './rate-limit/rateLimitSlice';
 // import messagePanelReducer from './messagePanel/messagePanelSlice';
@@ -21,7 +21,7 @@ export const store = configureStore({
     groups: groupsReducer,
     groupMessages: groupMessagesReducer,
     messageContainer: messageContainerReducer,
-    // groupSidebar: groupSidebarReducer,
+    groupSidebar: groupSidebarReducer,
     // rateLimit: rateLimitReducer,
     // messagePanel: messagePanelReducer,
     // systemNotification: systemNotificationReducer,

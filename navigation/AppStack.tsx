@@ -19,6 +19,7 @@ import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import ForwardMessageScreen from "../screens/Messages/ForwardMessageScreen";
 import GroupChannelScreen from "../screens/Group/GroupChannelScreen";
 import ChangePasswordScreen from "../screens/Setting/ChangePasswordScreen";
+import GroupSettings from "../screens/Group/GroupSettings";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -98,9 +99,14 @@ const MessageStack = ({ navigation }: Props) => (
       component={ForwardMessageScreen}
       options={({ route }: any) => ({
         title: "Forward Message",
-        // headerTitle: () => (
-        //   <ConversationTitle recipient={route?.params?.recipient} />
-        // ),
+        headerBackTitleVisible: false,
+      })}
+    />
+    <Stack.Screen
+      name="GroupSettings"
+      component={GroupSettings}
+      options={({ route }: any) => ({
+        title: "Group Settings",
         headerBackTitleVisible: false,
       })}
     />
@@ -139,7 +145,12 @@ const AppStack = () => {
   const getTabBarVisibility = (route: any) => {
     const routeName = getFocusedRouteNameFromRoute(route);
     // console.log(routeName);
-    if (routeName === "Conversation" || routeName === "Group") {
+    if (
+      routeName === "Conversation" ||
+      routeName === "Group" ||
+      routeName === "ForwardMessage" ||
+      routeName === "GroupSettings"
+    ) {
       return false;
     }
     return true;

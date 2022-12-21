@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Conversation, CreateConversationParams, Points } from '../../utils/types';
+import { Conversation, CreateConversationParams } from '../../utils/types';
 import { getConversations, postNewConversation } from '../../screens/Conversations/queries';
 import { RootState } from '..';
 
@@ -8,14 +8,12 @@ export interface ConversationsState {
   conversations: Conversation[];
   showContextMenu: boolean;
   selectedContextMenu?: Conversation;
-  points: Points;
   loading: boolean;
 }
 
 const initialState: ConversationsState = {
   conversations: [],
   showContextMenu: false,
-  points: { x: 0, y: 0 },
   loading: false,
 };
 
@@ -59,9 +57,6 @@ export const conversationsSlice = createSlice({
     setSelectedConversation: (state, action: PayloadAction<Conversation>) => {
       state.selectedContextMenu = action.payload;
     },
-    setContextMenuLocation: (state, action: PayloadAction<Points>) => {
-      state.points = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -91,6 +86,6 @@ export const selectConversationById = createSelector(
 );
 
 // Action creators are generated for each case reducer function
-export const { addConversation, updateConversation, toggleContextMenu, setSelectedConversation, setContextMenuLocation } = conversationsSlice.actions;
+export const { addConversation, updateConversation, toggleContextMenu, setSelectedConversation } = conversationsSlice.actions;
 
 export default conversationsSlice.reducer;

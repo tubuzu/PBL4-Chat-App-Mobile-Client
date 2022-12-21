@@ -4,8 +4,10 @@ import React, { useState } from "react";
 // import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
+import { toggleModal } from "../../store/groups/groupSlice";
 // import { removeAllAttachments } from "../../store/messagePanel/messagePanelSlice";
 import { createMessage } from "../../utils/apis";
+import AddGroupRecipientModal from "../modals/AddGroupRecipientModal";
 import MessagePanelBody from "./MessagePanelBody";
 import MessagePanelFooter from "./MessagePanelFooter";
 import { MessagePanelStyle } from "./styles";
@@ -20,6 +22,9 @@ function MessagePanel() {
   const selectedType = useSelector(
     (state: RootState) => state.selectedConversationType.type
   );
+  const showRecipientAddModal = useSelector(
+    (state: RootState) => state.groups.showRecipientAddModal
+  )
   const sendMessage = async () => {
     const trimmedContent = content.trim();
     const attachmentPayload = files;
@@ -64,6 +69,9 @@ function MessagePanel() {
       console.log(err);
     }
   };
+  const toggleAddRecipientModal = (visible: boolean) => {
+    dispatch(toggleModal(visible));
+  }
   return (
     <MessagePanelStyle>
       <MessagePanelBody />
@@ -75,6 +83,11 @@ function MessagePanel() {
         files={files}
         setFiles={setFiles}
       />
+      {
+        selectedType==="group" && showRecipientAddModal && (
+          <AddGroupRecipientModal modalVisible={showRecipientAddModal} setModalVisible={toggleAddRecipientModal} />
+        )
+      }
     </MessagePanelStyle>
   );
 }

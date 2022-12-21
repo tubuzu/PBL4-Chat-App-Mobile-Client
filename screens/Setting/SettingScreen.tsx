@@ -11,12 +11,12 @@ import { AuthContext } from "../../navigation/AuthProvider";
 import defaultAvatar from "../../assets/default_avatar.jpg";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store";
+// import { useDispatch } from "react-redux";
+// import { AppDispatch } from "../../store";
 
 function SettingScreen() {
   const { logout } = useContext(AuthContext);
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
   const navigation: any = useNavigation();
   const { user } = useContext(AuthContext);
 

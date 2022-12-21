@@ -1,8 +1,13 @@
+import { useRoute } from "@react-navigation/native";
 import React, { Dispatch, useEffect, useState } from "react";
 import { View } from "react-native";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../store";
-import { createGroupThunk } from "../../../store/groups/groupSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addGroupRecipient } from "../../../screens/Group/queries";
+import { AppDispatch, RootState } from "../../../store";
+import {
+  createGroupThunk,
+  selectGroupById,
+} from "../../../store/groups/groupSlice";
 import { searchUsers } from "../../../utils/apis";
 import { useDebounce } from "../../../utils/hooks/useDebounce";
 import { User } from "../../../utils/types";
@@ -12,13 +17,19 @@ import FormContainer from "../FormContainer";
 import FormInput from "../FormInput";
 import FormSubmitButton from "../FormSubmitButton";
 import { RecipientChipContainer } from "../styles";
+import Toast from "react-native-simple-toast";
 
 type Props = {
   setShowModal: Dispatch<React.SetStateAction<boolean>>;
 };
 
-function AddGroupForm({ setShowModal }: Props) {
-  const [title, setTitle] = useState('');
+function AddGroupRecipientForm({ setShowModal }: Props) {
+  const route: any = useRoute();
+  const groupId = route.params.chatId;
+  const group = useSelector((state: RootState) =>
+    selectGroupById(state, groupId)
+  );
+  const [title, setTitle] = useState("");
   const [query, setQuery] = useState("");
   const [userResults, setUserResults] = useState<User[]>([]);
   const [selectedRecipients, setSelectedRecipients] = useState<User[]>([]);
@@ -33,7 +44,12 @@ function AddGroupForm({ setShowModal }: Props) {
       setSearching(true);
       searchUsers(debouncedQuery)
         .then(({ data }) => {
-          //   console.log(data);
+          data = data.filter(
+            (user) =>
+              !group?.users.find(
+                (member) => member._id.toString() === user._id.toString()
+              )
+          )!;
           setUserResults(data);
         })
         .catch((err) => console.log(err))
@@ -42,23 +58,25 @@ function AddGroupForm({ setShowModal }: Props) {
   }, [debouncedQuery]);
 
   const onSubmit = () => {
-    if (selectedRecipients.length === 0 || !title) return;
-    const users = selectedRecipients.map((user) => user._id);
-    return dispatch(createGroupThunk({ title, users }))
-      .unwrap()
-      .then(({ data }) => {
-        console.log(data);
-        console.log('done');
+    if (selectedRecipients.length === 0) return;
+    const recipients = selectedRecipients.map((user) => user._id);
+    addGroupRecipient({ _id: groupId!, recipients: recipients })
+      .then(() => {
+        console.log("Recipient Added to Group");
+        setSelectedRecipients([]);
         setShowModal(false);
+        Toast.show("Added!", 1000);
       })
-      .catch((err) => console.log(err));
+      .catch((err: any) => {
+        console.log(err);
+      });
   };
 
   const handleUserSelect = (user: User) => {
     const exists = selectedRecipients.find((u) => u._id === user._id);
     if (!exists) setSelectedRecipients((prev) => [...prev, user]);
     setUserResults([]);
-    setQuery('');
+    setQuery("");
   };
 
   const removeUser = (user: User) =>
@@ -68,7 +86,11 @@ function AddGroupForm({ setShowModal }: Props) {
     <FormContainer widthScale={0.9}>
       <RecipientChipContainer>
         {selectedRecipients.map((user) => (
-          <SelectedGroupRecipientChip key={user._id} user={user} removeUser={removeUser} />
+          <SelectedGroupRecipientChip
+            key={user._id}
+            user={user}
+            removeUser={removeUser}
+          />
         ))}
       </RecipientChipContainer>
       {/* <GroupRecipientsField query={query} setQuery={setQuery} /> */}
@@ -85,17 +107,10 @@ function AddGroupForm({ setShowModal }: Props) {
           handleUserSelect={handleUserSelect}
         />
       )}
-      <FormInput
-        value={title}
-        onChangeText={(value: any) => setTitle(value)}
-        label="Title"
-        placeholder="Group title"
-        autoCapitalize="none"
-      />
       <View style={{ height: 10 }}></View>
       <FormSubmitButton title="Submit" onPress={onSubmit} />
     </FormContainer>
   );
 }
 
-export default AddGroupForm;
+export default AddGroupRecipientForm;

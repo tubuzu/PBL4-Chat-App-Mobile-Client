@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components/native";
 
 export const Container = styled.View`
   flex: 1;
@@ -8,7 +8,7 @@ export const Container = styled.View`
   background-color: #ffffff;
 `;
 
-export const Card = styled.TouchableOpacity`
+export const Card = styled.TouchableHighlight`
   width: 100%;
 `;
 

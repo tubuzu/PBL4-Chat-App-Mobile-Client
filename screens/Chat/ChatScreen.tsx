@@ -16,6 +16,7 @@ import { updateType } from "../../store/selectedSlice";
 import {
   addConversation,
   fetchConversationsThunk,
+  setSelectedConversation,
   updateConversation,
 } from "../../store/conversations/conversationSlice";
 import ConversationItem from "../../components/chat/ConversationItem";
@@ -34,10 +35,14 @@ import {
   addGroup,
   fetchGroupsThunk,
   removeGroup,
+  setSelectedGroup,
   updateGroup,
 } from "../../store/groups/groupSlice";
 import { addMessage, deleteMessage } from "../../store/messages/messageSlice";
 import { getRecipientFromConversation } from "../../utils/helpers";
+import ContextMenuPopup from "../../components/action-menu/ContextMenuPopup";
+import ConversationActionMenu from "../../components/action-menu/ConversationActionMenu";
+import GroupActionMenu from "../../components/action-menu/GroupActionMenu";
 
 type Props = {
   navigation: any;
@@ -46,6 +51,7 @@ type Props = {
 const ChatScreen = ({ navigation }: Props) => {
   const [query, setQuery] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [contextMenuVisible, setContextMenuVisible] = useState(false);
   const socket = useContext(SocketContext);
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useContext(AuthContext);
@@ -57,6 +63,14 @@ const ChatScreen = ({ navigation }: Props) => {
   const conversationType = useSelector(
     (state: RootState) => state.selectedConversationType.type
   );
+
+  const handleContextMenu = (chat: Conversation | Group) => {
+    console.log("chatscreen");
+    if (conversationType === "private")
+      dispatch(setSelectedConversation(chat as Conversation));
+    else dispatch(setSelectedGroup(chat as Group));
+    setContextMenuVisible(true);
+  };
 
   useEffect(() => {
     dispatch(updateType("private"));
@@ -187,6 +201,7 @@ const ChatScreen = ({ navigation }: Props) => {
               navigation={navigation}
               item={item}
               userId={user?._id!}
+              onContextMenu={() => handleContextMenu(item)}
             />
           )}
         />
@@ -201,20 +216,47 @@ const ChatScreen = ({ navigation }: Props) => {
           }
           keyExtractor={(item: Group) => item._id}
           renderItem={({ item }) => (
-            <GroupItem navigation={navigation} item={item} userId={user?._id!} />
+            <GroupItem
+              navigation={navigation}
+              item={item}
+              userId={user?._id!}
+              onContextMenu={() => handleContextMenu(item)}
+            />
           )}
         />
       )}
       {conversationType === "private" ? (
-        <AddConversationModal
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-        />
+        <>
+          <AddConversationModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />
+          <ContextMenuPopup
+            modalVisible={contextMenuVisible}
+            setModalVisible={setContextMenuVisible}
+          >
+            <ConversationActionMenu
+              modalVisible={contextMenuVisible}
+              setModalVisible={setContextMenuVisible}
+            />
+          </ContextMenuPopup>
+        </>
       ) : (
-        <AddGroupModal
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-        />
+        <>
+          <AddGroupModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />
+          <ContextMenuPopup
+            modalVisible={contextMenuVisible}
+            setModalVisible={setContextMenuVisible}
+          >
+            <GroupActionMenu
+              modalVisible={contextMenuVisible}
+              setModalVisible={setContextMenuVisible}
+            />
+          </ContextMenuPopup>
+        </>
       )}
     </SafeAreaView>
   );

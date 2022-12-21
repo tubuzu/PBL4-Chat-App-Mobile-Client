@@ -8,14 +8,14 @@ import {
   Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import AddGroupForm from "../forms/group/AddGroupForm";
+import AddGroupRecipientForm from "../forms/group/AddGroupRecipientForm";
 
 type ModalProps = {
   modalVisible: boolean;
   setModalVisible: any;
 };
 
-function AddGroupModal({ modalVisible, setModalVisible }: ModalProps) {
+function AddGroupRecipientModal({ modalVisible, setModalVisible }: ModalProps) {
   return (
     <Modal
       animationType="fade"
@@ -28,7 +28,7 @@ function AddGroupModal({ modalVisible, setModalVisible }: ModalProps) {
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Create a Group</Text>
+            <Text style={styles.modalTitle}>Add Recipients</Text>
             <Pressable
               // style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}
@@ -39,7 +39,7 @@ function AddGroupModal({ modalVisible, setModalVisible }: ModalProps) {
           </View>
 
           <View style={styles.modalBody}>
-            <AddGroupForm setShowModal={setModalVisible} />
+            <AddGroupRecipientForm setShowModal={setModalVisible} />
           </View>
         </View>
       </View>
@@ -86,4 +86,4 @@ const styles = StyleSheet.create({
   modalBody: {},
 });
 
-export default AddGroupModal;
+export default AddGroupRecipientModal;

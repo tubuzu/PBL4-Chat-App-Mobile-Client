@@ -21,9 +21,10 @@ type Props = {
   item: Group;
   navigation: any;
   userId: string;
+  onContextMenu: any;
 };
 
-function GroupItem({ item: group, navigation, userId }: Props) {
+function GroupItem({ item: group, navigation, userId, onContextMenu }: Props) {
   const MESSAGE_LENGTH_MAX = 50;
   const latestMessageContent = () => {
     if (group?.latestMessage !== undefined) {
@@ -55,7 +56,12 @@ function GroupItem({ item: group, navigation, userId }: Props) {
     return null;
   };
   return (
-    <Card onPress={() => navigation.navigate("Group", { chatId: group._id })}>
+    <Card
+      underlayColor={"rgba(0,0,0,0.1)"}
+      delayLongPress={400}
+      onPress={() => navigation.navigate("Group", { chatId: group._id })}
+      onLongPress={onContextMenu}
+    >
       <UserInfo>
         <UserImgWrapper>
           <UserImg source={groupAvatar} />

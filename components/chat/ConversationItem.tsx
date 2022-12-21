@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import {
   Card,
   MessageText,
@@ -10,7 +10,7 @@ import {
   UserInfoText,
   UserName,
 } from "../../utils/styles/MessageStyles";
-import { Conversation, User } from "../../utils/types";
+import { Conversation } from "../../utils/types";
 import { getRecipientFromConversation } from "../../utils/helpers";
 import defaultAvatar from "../../assets/default_avatar.jpg";
 import { formatRelative } from "date-fns";
@@ -19,9 +19,15 @@ type Props = {
   item: Conversation;
   navigation: any;
   userId: string;
+  onContextMenu: any;
 };
 
-function ConversationItem({ item: conversation, navigation, userId }: Props) {
+function ConversationItem({
+  item: conversation,
+  navigation,
+  userId,
+  onContextMenu,
+}: Props) {
   const MESSAGE_LENGTH_MAX = 50;
   const recipient = getRecipientFromConversation(conversation, userId);
   // console.log(recipient);
@@ -55,9 +61,12 @@ function ConversationItem({ item: conversation, navigation, userId }: Props) {
 
   return (
     <Card
+      underlayColor={"rgba(0,0,0,0.1)"}
+      delayLongPress={400}
       onPress={() =>
         navigation.navigate("Conversation", { chatId: conversation._id })
       }
+      onLongPress={onContextMenu}
     >
       <UserInfo>
         <UserImgWrapper>
