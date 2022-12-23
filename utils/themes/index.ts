@@ -12,10 +12,12 @@ export const palette = {
     lightGray: "#757575",
     iconGray: "#717171",
     tomato: "#ff6347",
+    dark: "#3b4045",
 };
 
 export type Theme = {
     colors: {
+        notch: string,
         background: string,
         foreground: string,
         primary: string,
@@ -36,6 +38,7 @@ export type Theme = {
 
 export const LightTheme: Theme = {
     colors: {
+        notch: palette.dark,
         background: palette.smokeWhite,
         foreground: palette.tealGreenDark,
         primary: palette.tealGreen,

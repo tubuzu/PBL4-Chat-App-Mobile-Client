@@ -46,7 +46,7 @@ const Login = ({ navigation, setLoading }: Props) => {
           setLoading(false);
         })
         .catch((err: any) => {
-          console.log(err);
+          updateError("Wrong email or password!", setError);
           setLoading(false);
         });
     }

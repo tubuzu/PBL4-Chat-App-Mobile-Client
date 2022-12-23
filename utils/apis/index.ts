@@ -2,9 +2,9 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ConversationType, CreateMessageParams, DeleteGroupMessageParams, DeleteGroupMessageResponse, DeleteMessageParams, DeleteMessageResponse, EditMessagePayload, FetchGroupMessagePayload, FetchMessagePayload, GroupMessageType, MessageType, User } from "../types";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_NATIVE_APP_API_URL;
 
-export const axiosClient = axios.create({ baseURL: 'https://9983-58-187-194-212.ap.ngrok.io/api' });
+export const axiosClient = axios.create({ baseURL: "https://bkzalo-server.onrender.com/api" });
 axiosClient.interceptors.request.use(async (config) => {
     if (config.headers) {
         let token = await AsyncStorage.getItem("token")! || '';

@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     color: "green",
   },
   chattopContainer: {
-    backgroundColor: "#1e81b0",
+    backgroundColor: "#525960",
     height: 50,
     width: "100%",
     padding: 5,
@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     height: "100%",
   },
   searchBar: {
-    flex: 0.9,
+    flex: 1,
   },
   addIcon: {
     flex: 0.1,

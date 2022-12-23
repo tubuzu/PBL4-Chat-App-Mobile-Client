@@ -16,6 +16,14 @@ function ChangePasswordScreen() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const handleReset = () => {
+    setPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setError("");
+    setLoading(false);
+  }
+
   const isValidForm = () => {
     if (!password || !newPassword || !confirmPassword) {
       updateError("Required all fields!", setError);
@@ -43,7 +51,7 @@ function ChangePasswordScreen() {
         newPassword: confirmPassword,
       })
         .then(() => {
-          setLoading(false);
+          handleReset();
           Toast.show("Successfully change password!", 1000);
         })
         .catch((err) => {

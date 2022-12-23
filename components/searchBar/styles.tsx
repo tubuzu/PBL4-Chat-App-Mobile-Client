@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     chatCloseIcon: {
     },
     chatSearchBar: {
-        backgroundColor: "rgba(45, 158, 183, 0.93)",
+        backgroundColor: "#6a737c",
         borderRadius: 8,
         width: "100%",
         height: "100%",

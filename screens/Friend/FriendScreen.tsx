@@ -1,10 +1,14 @@
-import React from 'react'
-import { Text, View } from 'react-native'
+import React from "react";
+import { Text, View } from "react-native";
 
 function FriendScreen() {
   return (
-    <View><Text>FriendScreen</Text></View>
-  )
+    <View
+      style={{ flex: 1, flexDirection: "column", justifyContent: "flex-start" }}
+    >
+      <Text>FriendScreen</Text>
+    </View>
+  );
 }
 
-export default FriendScreen
+export default FriendScreen;

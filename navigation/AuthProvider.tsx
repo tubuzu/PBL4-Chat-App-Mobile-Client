@@ -45,6 +45,7 @@ export const AuthProvider = ({ children, user, setUser }: Props) => {
             });
           } catch (e) {
             console.log(e);
+            throw e;
           }
         },
         register: async (data: CreateUserParams) => {

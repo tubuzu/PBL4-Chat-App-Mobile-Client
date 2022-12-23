@@ -20,6 +20,8 @@ import ForwardMessageScreen from "../screens/Messages/ForwardMessageScreen";
 import GroupChannelScreen from "../screens/Group/GroupChannelScreen";
 import ChangePasswordScreen from "../screens/Setting/ChangePasswordScreen";
 import GroupSettings from "../screens/Group/GroupSettings";
+import { LightTheme } from "../utils/themes";
+import HeaderRight from "../components/header/HeaderRight";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -34,36 +36,12 @@ const FriendStack = ({ navigation }: Props) => (
       name="FriendScreen"
       component={FriendScreen}
       options={{
-        headerShown: false,
+        title: "Friends",
+        statusBarColor: LightTheme.colors.notch,
+        statusBarStyle: "light",
+        headerTitleAlign: "left",
       }}
     />
-    {/* <Stack.Screen
-      name="RN Social"
-      component={HomeScreen}
-      options={{
-        headerTitleAlign: "center",
-        headerTitleStyle: {
-          color: "#2e64e5",
-          fontFamily: "Kufam-SemiBoldItalic",
-          fontSize: 18,
-        },
-        headerStyle: {
-          shadowColor: "#fff",
-          elevation: 0,
-        },
-        headerRight: () => (
-          <View style={{ marginRight: 10 }}>
-            <FontAwesome5.Button
-              name="plus"
-              size={22}
-              backgroundColor="#fff"
-              color="#2e64e5"
-              onPress={() => navigation.navigate("AddPost")}
-            />
-          </View>
-        ),
-      }}
-    /> */}
   </Stack.Navigator>
 );
 
@@ -74,6 +52,8 @@ const MessageStack = ({ navigation }: Props) => (
       component={ChatScreen}
       options={{
         headerShown: false,
+        statusBarColor: LightTheme.colors.notch,
+        statusBarStyle: "light",
       }}
     />
     <Stack.Screen
@@ -81,17 +61,27 @@ const MessageStack = ({ navigation }: Props) => (
       component={ConversationChannelScreen}
       options={({ route }: any) => ({
         // title: "hehe",
-        headerTitle: () => <ConversationTitle />,
+        headerTitle: (props) => <ConversationTitle {...props} />,
+        headerTitleAlign: "left",
         headerBackTitleVisible: false,
+        animationTypeForReplace: "push",
+        animation: "slide_from_right",
+        statusBarColor: LightTheme.colors.notch,
+        statusBarStyle: "light",
       })}
     />
     <Stack.Screen
       name="Group"
       component={GroupChannelScreen}
       options={({ route }: any) => ({
-        // title: "hehe",
         headerTitle: () => <ConversationTitle />,
+        headerRight: () => <HeaderRight />,
+        headerTitleAlign: "left",
         headerBackTitleVisible: false,
+        animationTypeForReplace: "push",
+        animation: "slide_from_right",
+        statusBarColor: LightTheme.colors.notch,
+        statusBarStyle: "light",
       })}
     />
     <Stack.Screen
@@ -99,7 +89,10 @@ const MessageStack = ({ navigation }: Props) => (
       component={ForwardMessageScreen}
       options={({ route }: any) => ({
         title: "Forward Message",
+        headerTitleAlign: "left",
         headerBackTitleVisible: false,
+        statusBarColor: LightTheme.colors.notch,
+        statusBarStyle: "light",
       })}
     />
     <Stack.Screen
@@ -107,7 +100,12 @@ const MessageStack = ({ navigation }: Props) => (
       component={GroupSettings}
       options={({ route }: any) => ({
         title: "Group Settings",
+        headerTitleAlign: "left",
         headerBackTitleVisible: false,
+        animationTypeForReplace: "push",
+        animation: "slide_from_right",
+        statusBarColor: LightTheme.colors.notch,
+        statusBarStyle: "light",
       })}
     />
   </Stack.Navigator>
@@ -120,6 +118,9 @@ const SettingStack = ({ navigation }: Props) => (
       component={SettingScreen}
       options={{
         title: "Settings",
+        headerTitleAlign: "left",
+        statusBarColor: LightTheme.colors.notch,
+        statusBarStyle: "light",
       }}
     />
     <Stack.Screen
@@ -132,6 +133,10 @@ const SettingStack = ({ navigation }: Props) => (
         headerStyle: {
           backgroundColor: "#fff",
         },
+        animationTypeForReplace: "push",
+        animation: "slide_from_right",
+        statusBarColor: LightTheme.colors.notch,
+        statusBarStyle: "light",
       }}
     />
   </Stack.Navigator>
@@ -172,7 +177,8 @@ const AppStack = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: "#2e64e5",
+        tabBarActiveTintColor: "black",
+        tabBarInactiveTintColor: "#acb3b9",
       }}
     >
       <Tab.Screen
@@ -200,6 +206,7 @@ const AppStack = () => {
         name="Friends"
         component={FriendStack}
         options={{
+          headerShown: false,
           // tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" color={color} size={size} />

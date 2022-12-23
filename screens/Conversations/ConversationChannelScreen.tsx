@@ -28,12 +28,12 @@ function ConversationChannelScreen() {
 
   useEffect(() => {
     const conversationId = routeId!;
-    socket.emit('onConversationJoin', { conversationId });
-    socket.on('userJoin', () => {
-      console.log('userJoin');
+    socket.emit("onConversationJoin", { conversationId });
+    socket.on("userJoin", () => {
+      console.log("userJoin");
     });
-    socket.on('userLeave', () => {
-      console.log('userLeave');
+    socket.on("userLeave", () => {
+      console.log("userLeave");
     });
     // socket.on('onTypingStart', () => {
     //   console.log('onTypingStart: User has started typing...');
@@ -43,19 +43,19 @@ function ConversationChannelScreen() {
     //   console.log('onTypingStop: User has stopped typing...');
     //   setIsRecipientTyping(false);
     // });
-    socket.on('onMessageUpdate', (message) => {
-      console.log('onMessageUpdate received');
+    socket.on("onMessageUpdate", (message) => {
+      console.log("onMessageUpdate received");
       console.log(message);
       dispatch(editMessage(message));
     });
 
     return () => {
-      socket.emit('onConversationLeave', { conversationId });
-      socket.off('userJoin');
-      socket.off('userLeave');
-      socket.off('onTypingStart');
-      socket.off('onTypingStop');
-      socket.off('onMessageUpdate');
+      socket.emit("onConversationLeave", { conversationId });
+      socket.off("userJoin");
+      socket.off("userLeave");
+      socket.off("onTypingStart");
+      socket.off("onTypingStop");
+      socket.off("onMessageUpdate");
     };
   }, [routeId]);
 

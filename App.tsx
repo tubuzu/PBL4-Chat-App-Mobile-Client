@@ -12,7 +12,7 @@ import AuthStack from "./navigation/AuthStack";
 import AppStack from "./navigation/AppStack";
 import { AuthProvider } from "./navigation/AuthProvider";
 import { User } from "./utils/types";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
@@ -55,9 +55,11 @@ export default function App() {
   return (
     <AppWithProviders socket={socket} user={user} setUser={setUser}>
       <SafeAreaProvider>
+        {/* <SafeAreaView style={{flex: 1, backgroundColor: "#cbcbcb"}}> */}
         <NavigationContainer>
           {user === null ? <AuthStack /> : <AppStack />}
         </NavigationContainer>
+        {/* </SafeAreaView> */}
       </SafeAreaProvider>
     </AppWithProviders>
   );
