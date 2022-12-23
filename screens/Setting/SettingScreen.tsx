@@ -26,7 +26,8 @@ function SettingScreen() {
   return (
     <View style={styles.container}>
       <TouchableHighlight
-        onPress={() => navigation.navigate("ProfileScreen")}
+        // onPress={() => navigation.navigate("ProfileScreen")}
+        onPress={() => {}}
         underlayColor="#fafafa"
         style={styles.profileSetting}
       >
