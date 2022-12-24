@@ -170,7 +170,9 @@ const Message = ({
           ]}
         >
           {isLeft && isFirst && (
-            <Text>{capitalize(message?.sender?.lastname)}</Text>
+            <Text style={{ paddingLeft: 10 }}>
+              {capitalize(message?.sender?.lastname)}
+            </Text>
           )}
           {message?.attachments?.length > 0 && (
             <View

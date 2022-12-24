@@ -39,12 +39,12 @@ function ConversationItem({
         return latestMessage.content?.length >= MESSAGE_LENGTH_MAX
           ? isMe
             ? latestMessage.content?.slice(0, MESSAGE_LENGTH_MAX).concat("...")
-            : `${recipient?.lastname} ${latestMessage.content
+            : `${recipient?.lastname}: ${latestMessage.content
                 ?.slice(0, MESSAGE_LENGTH_MAX)
                 .concat("...")}`
           : isMe
           ? latestMessage.content
-          : `${recipient?.lastname} ${latestMessage.content}`;
+          : `${recipient?.lastname}: ${latestMessage.content}`;
       else if (latestMessage && latestMessage.attachments) {
         let msg = isMe
           ? `You has sent an attachment`
